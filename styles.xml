@@ -1,0 +1,1 @@
+<resources><style name="Theme.ListeCourses" parent="Theme.MaterialComponents.DayNight.NoActionBar"><item name="colorPrimary">@color/green</item><item name="colorPrimaryVariant">@color/green_dark</item><item name="android:fontFamily">sans</item></style></resources>
