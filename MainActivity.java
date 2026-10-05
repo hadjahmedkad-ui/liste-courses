@@ -1,0 +1,17 @@
+package com.artkadvision.listecourses;
+
+import android.app.*;import android.os.Bundle;import android.content.Intent;import android.graphics.Typeface;import android.view.*;import android.widget.*;import androidx.appcompat.app.AppCompatActivity;import com.google.zxing.integration.android.IntentIntegrator;import com.google.zxing.integration.android.IntentResult;import java.util.*;
+
+public class MainActivity extends AppCompatActivity {
+ LinearLayout wantedList,purchases; EditText wanted,product,price,amount; RadioButton weight; TextView subtotal,total; double sum=0;
+ @Override public void onCreate(Bundle b){super.onCreate(b);setContentView(R.layout.activity_main);wantedList=findViewById(R.id.wantedList);purchases=findViewById(R.id.purchases);wanted=findViewById(R.id.wanted);product=findViewById(R.id.product);price=findViewById(R.id.price);amount=findViewById(R.id.amount);weight=findViewById(R.id.weight);subtotal=findViewById(R.id.subtotal);total=findViewById(R.id.total);
+  findViewById(R.id.addWanted).setOnClickListener(v->addWanted());findViewById(R.id.addPurchase).setOnClickListener(v->confirmPurchase());findViewById(R.id.reset).setOnClickListener(v->resetAll());findViewById(R.id.scan).setOnClickListener(v->new IntentIntegrator(this).setPrompt("Scanne l’étiquette").setBeepEnabled(true).initiateScan()); }
+ void addWanted(){String s=wanted.getText().toString().trim();if(s.isEmpty())return; addRemovableRow(wantedList,"• "+s,0,false);wanted.setText("");}
+ void confirmPurchase(){String n=product.getText().toString().trim();double p=num(price),a=num(amount);if(n.isEmpty()||p<=0||a<=0){Toast.makeText(this,"Complète produit, prix et quantité/poids",Toast.LENGTH_SHORT).show();return;} double line=p*a;String unit=weight.isChecked()?" kg":" unité(s)"; new AlertDialog.Builder(this).setTitle("Confirmer l’achat").setMessage(n+"\n"+fmt(a)+unit+" × "+fmt(p)+" €\n= "+fmt(line)+" €").setNegativeButton("Modifier",null).setPositiveButton("Ajouter",(d,w)->{addRemovableRow(purchases,n+" — "+fmt(a)+unit+" — "+fmt(line)+" €",line,true);sum+=line;refresh();product.setText("");price.setText("");amount.setText("");}).show();}
+ void addRemovableRow(LinearLayout parent,String text,double value,boolean money){LinearLayout row=new LinearLayout(this);row.setOrientation(LinearLayout.HORIZONTAL);TextView t=new TextView(this);t.setText(text);t.setTextSize(17);t.setPadding(0,10,8,10);row.addView(t,new LinearLayout.LayoutParams(0,-2,1));Button del=new Button(this);del.setText("✕");row.addView(del);del.setOnClickListener(v->{parent.removeView(row);if(money){sum-=value;if(sum<0)sum=0;refresh();}});parent.addView(row);}
+ void refresh(){subtotal.setText("Sous-total : "+fmt(sum)+" €");total.setText("Total : "+fmt(sum)+" €");}
+ void resetAll(){purchases.removeAllViews();sum=0;refresh();}
+ double num(EditText e){try{return Double.parseDouble(e.getText().toString().replace(',','.'));}catch(Exception x){return 0;}}
+ String fmt(double x){return String.format(Locale.FRANCE,"%.2f",x);}
+ @Override protected void onActivityResult(int r,int c,Intent data){IntentResult z=IntentIntegrator.parseActivityResult(r,c,data);if(z!=null){if(z.getContents()!=null){String code=z.getContents();product.setText("Produit scanné "+code); if(code.matches("2\\d{12}")){try{int cents=Integer.parseInt(code.substring(7,12));price.setText(String.format(Locale.US,"%.2f",cents/100.0));amount.setText("1");Toast.makeText(this,"Prix d’étiquette détecté : vérifie puis confirme",Toast.LENGTH_LONG).show();}catch(Exception ignored){}}}return;}super.onActivityResult(r,c,data);}
+}
