@@ -1,7 +1,26 @@
-plugins { id 'com.android.application' version '8.7.3' }
+plugins {
+    id 'com.android.application' version '8.7.3'
+}
 
-android { namespace 'com.artkadvision.listecourses'; compileSdk 35
-    defaultConfig { applicationId 'com.artkadvision.listecourses'; minSdk 23; targetSdk 35; versionCode 1; versionName '1.0' }
+android {
+    namespace 'com.artkadvision.listecourses'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.artkadvision.listecourses'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'app/src/main/AndroidManifest.xml'
+            java.srcDirs = ['app/src/main/java']
+            res.srcDirs = ['app/src/main/res']
+        }
+    }
 }
 
 dependencies {
