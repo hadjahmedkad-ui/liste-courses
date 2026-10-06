@@ -1,7 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
- <application android:theme="@style/Theme.ListeCourses" android:label="Liste Courses" android:icon="@drawable/ic_launcher_cart" android:roundIcon="@drawable/ic_launcher_cart">
-  <activity android:name=".MainActivity" android:screenOrientation="portrait" android:exported="true">
-   <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
-  </activity>
- </application>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:label="Liste Courses"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
 </manifest>
